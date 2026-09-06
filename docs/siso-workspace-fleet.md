@@ -119,9 +119,11 @@ node scripts/siso-smoke.mjs HTTPS_ORIGIN OWNER_AUTH_JSON NODE WORKSPACE_ROOT
 The smoke uses real owner approval, PKCE, token refresh, MCP discovery and calls;
 it never prints tokens and revokes its test tokens afterward. `SISO_PUBLIC_IP`
 can force an observed public IP while retaining TLS hostname verification.
-`--restart-test` is deployment-specific: it restarts the two Mini system services
-over the existing SSH alias, reconnects with the same OAuth token, and proves the
-same job PID completes and returns logs. Do not use that flag on another deployment.
+`--restart-test` defaults to the two Mini system services over the existing SSH
+alias. Operators can explicitly set `SISO_RESTART_SSH` and
+`SISO_RESTART_COMMAND` for another authorized deployment. It reconnects with the
+same OAuth token and proves the same job PID completes and returns logs. These
+are operator-provided shell commands, never MCP inputs.
 
 These tests are **not** a ChatGPT acceptance substitute. Installation in ChatGPT
 and a real tool call there must be observed separately before calling the

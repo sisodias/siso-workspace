@@ -36,6 +36,11 @@ if not receipt.exists():
                 raise ValueError("Unexpected archive member")
             if not member.isfile() and not member.isdir():
                 raise ValueError("Links/devices are not accepted in releases")
+        required = {"scripts/siso-node.py", "SKILL.md"}
+        if role == "gateway":
+            required.update({"dist/cli.js", "package.json", "package-lock.json", "scripts/fix-node-pty-permissions.mjs"})
+        if not required.issubset({str(Path(m.name)) for m in entries if m.isfile()}):
+            raise ValueError("Release is missing required runtime files")
         tar.extractall(target, filter="data")
     if role == "gateway":
         subprocess.run(["npm", "ci", "--omit=dev", "--no-audit", "--no-fund"], cwd=target, check=True, stdout=sys.stderr)

@@ -25,7 +25,7 @@ for(const t of inventory.targets){
   try {
     for(const cmd of t.restart)execute(cmd);
     for(const cmd of t.check ?? [])execute(cmd);
-    console.log(JSON.stringify({target:t.id,status:"installed-and-service-checked",...installed}));
+    console.log(JSON.stringify({target:t.id,status:t.check?.length ? "installed-and-service-checked" : "installed-only",...installed}));
   } catch(error) {
     // Keep prior immutable releases so in-flight jobs can still import their original code.
     if(installed.previous){

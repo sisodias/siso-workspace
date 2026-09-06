@@ -9,6 +9,7 @@ if(run("git",["status","--porcelain","--untracked-files=no"]))throw Error("Commi
 const commit=run("git",["rev-parse","HEAD"]);
 run("npm",["run","typecheck"]);run("npm",["test"]);run("bash",["scripts/test-siso-fleet.sh"]);run("npm",["run","build"]);
 if(run("git",["status","--porcelain","--untracked-files=no"]))throw Error("Build changed tracked source");
+if(run("git",["rev-parse","HEAD"])!==commit)throw Error("Source HEAD changed during the build");
 mkdirSync(out,{recursive:true});
 const artifact=join(out,`siso-workspace-${commit.slice(0,12)}.tar.gz`);
 run("tar",["-czf",artifact,"dist","scripts/siso-node.py","scripts/fix-node-pty-permissions.mjs","SKILL.md","package.json","package-lock.json"]);

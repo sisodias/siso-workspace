@@ -130,7 +130,7 @@ try {
     const before=await call("job_status",{job_id:j.job_id});
     assert.equal(before.status,"running");
     await client.close();
-    const restart=spawnSync("ssh",["-T","-o","RemoteCommand=none","mac-mini-ts","sudo -n launchctl kickstart -k system/com.siso.workspace-gateway && sudo -n launchctl kickstart -k system/com.siso.workspace-node"],{encoding:"utf8",timeout:20000});
+    const restart=spawnSync("ssh",["-T","-o","RemoteCommand=none",process.env.SISO_RESTART_SSH ?? "mac-mini-ts",process.env.SISO_RESTART_COMMAND ?? "sudo -n launchctl kickstart -k system/com.siso.workspace-gateway && sudo -n launchctl kickstart -k system/com.siso.workspace-node"],{encoding:"utf8",timeout:20000});
     assert.equal(restart.status,0,restart.stderr);
     let connected=false;
     for(let i=0;i<20;i++){
@@ -146,7 +146,7 @@ try {
     assert.equal(after.pid,before.result.pid);
     const output=await done(await call("job_logs",{job_id:j.job_id}));
     assert.match(output.text,/restart-before\nrestart-after/);
-    console.log("PASS gateway + node daemon restart, same detached child PID, persisted OAuth and logs",JSON.stringify({job_id:j.job_id,pid:after.pid,stdout:output.text}));
+    console.log("PASS requested service restart, same detached child PID, persisted OAuth and logs",JSON.stringify({node,job_id:j.job_id,pid:after.pid,stdout:output.text}));
   }
 } finally {
   await client.close();
