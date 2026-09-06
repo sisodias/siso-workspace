@@ -124,11 +124,16 @@ try {
   assert.equal(cancelled.status,"cancelled");
   console.log("PASS cancellation", cancellation.job_id);
   if(process.argv.includes("--restart-test")) {
-    const j=await call("job_start",{node,cwd:root,command:"python3 -u -c 'import time; print(\"restart-before\",flush=True); time.sleep(35); print(\"restart-after\",flush=True)'",timeout_seconds:90});
+    const j=await call("job_start",{node,cwd:root,command:"python3 -u -c 'import time; print(\"restart-before\",flush=True); time.sleep(60); print(\"restart-after\",flush=True)'",timeout_seconds:120});
     console.log("RESTART_JOB",j.job_id);
-    await new Promise(r=>setTimeout(r,3000));
-    const before=await call("job_status",{job_id:j.job_id});
+    let before=await call("job_status",{job_id:j.job_id});
+    const startDeadline=Date.now()+30000;
+    while((before.status!=="running" || !before.result?.pid) && Date.now()<startDeadline && ["queued","dispatched","running"].includes(before.status)) {
+      await new Promise(r=>setTimeout(r,700));
+      before=await call("job_status",{job_id:j.job_id});
+    }
     assert.equal(before.status,"running");
+    assert.ok(before.result?.pid,"Job must have an observed child PID before restart");
     await client.close();
     const restart=spawnSync("ssh",["-T","-o","RemoteCommand=none",process.env.SISO_RESTART_SSH ?? "mac-mini-ts",process.env.SISO_RESTART_COMMAND ?? "sudo -n launchctl kickstart -k system/com.siso.workspace-gateway && sudo -n launchctl kickstart -k system/com.siso.workspace-node"],{encoding:"utf8",timeout:20000});
     assert.equal(restart.status,0,restart.stderr);
