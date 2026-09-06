@@ -1,0 +1,7 @@
+node_modules
+.serena/
+__pycache__/
+dist/
+releases/
+.env
+*.log

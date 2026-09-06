@@ -1,0 +1,28 @@
+[Unit]
+Description=SISO Workspace outbound execution node
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=siso-workspace
+Group=siso-workspace
+WorkingDirectory=/srv/siso-workspace
+ExecStart=/usr/bin/python3 /opt/siso-workspace/current/scripts/siso-node.py --config /etc/siso-workspace/node.json
+Restart=always
+RestartSec=3
+KillMode=process
+UMask=0077
+Nice=10
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/srv/siso-workspace /var/lib/siso-workspace
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target
