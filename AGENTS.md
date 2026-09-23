@@ -1,5 +1,7 @@
 # DevSpace
 
+**In one line:** MCP server exposing machine-scoped file, shell and job tools to remote hosts through outbound node agents. District: `SISO_Agents` (`~/SISO_Workspace/SISO_Agents/siso-workspace`).
+
 DevSpace is a local development execution layer for MCP hosts such as ChatGPT and Claude. It gives a remote host workspace-scoped tools for reading, editing, searching, running commands, managing Git worktrees, reviewing changes, and coordinating bounded subagents on the user's machine.
 
 Pi's SDK currently provides mature local coding primitives. DevSpace wraps those primitives in a Streamable HTTP MCP server and adds the product-specific boundaries around them: approved roots, workspace state, instructions, process sessions, worktrees, artifacts, review checkpoints, widgets, and subagent execution.
