@@ -105,7 +105,7 @@ For UI changes, include before/after images and a short interaction video when b
 - `src/review-checkpoints.ts` — persisted change-review checkpoints.
 - `src/ui/` — MCP widgets.
 - `src/db/` — persisted local state and migrations.
-- `test/` — behavior and regression tests.
+- `src/*.test.ts` — behavior and regression tests (`npm test` runs them).
 
 Start at the boundary named by the problem and follow the data. Keep policy in DevSpace, provider translation in adapters, and important behavior in schemas, types, checks, or explicit tool results rather than hidden prompt conventions.
 
